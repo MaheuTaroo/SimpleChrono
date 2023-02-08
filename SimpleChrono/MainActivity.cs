@@ -41,19 +41,6 @@ namespace SimpleChrono
                 }
             };
 
-            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MatchParent, RelativeLayout.LayoutParams.WrapContent);
-            lp.AddRule(LayoutRules.Above, 2);
-            views[0][0].LayoutParameters = lp;
-
-            lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MatchParent, RelativeLayout.LayoutParams.WrapContent);
-            lp.AddRule(LayoutRules.Above, 3);
-            lp.AddRule(LayoutRules.Below, 1);
-            views[1][0].LayoutParameters = lp;
-
-            lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MatchParent, RelativeLayout.LayoutParams.WrapContent);
-            lp.AddRule(LayoutRules.Below, 2);
-            views[2][0].LayoutParameters = lp;
-
             views[3][1].Click += (sender, args) =>
             {
                 for (int i = 0; i < 3; i++)
