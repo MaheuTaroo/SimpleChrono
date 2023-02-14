@@ -5,88 +5,84 @@ using Android.OS;
 using Android.Support.V7.App;
 using Android.Views;
 using Android.Widget;
+using AndroidColor = Android.Graphics.Color;
 
 namespace SimpleChrono
 {
-    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true)]
+    [Activity(Label = "@string/app_name", Theme = "@style/AppTheme.NoActionBar", MainLauncher = true, ConfigurationChanges = Android.Content.PM.ConfigChanges.Orientation | Android.Content.PM.ConfigChanges.ScreenLayout | Android.Content.PM.ConfigChanges.ScreenSize)]
     public class MainActivity : AppCompatActivity
     {
-        Timer t = new Timer(1000);
-        int time = 0;
+        readonly Timer t = new Timer(100);
+        int time = 0, temp = 0;
+        bool active = false;
 
         protected override void OnCreate(Bundle savedInstanceState)
         {
             base.OnCreate(savedInstanceState);
+            SetContentView(Resource.Layout.Main);
 
-            TableLayout tl = new TableLayout(this);
+            t.Elapsed += UpdateTimer;
 
-            /*CustomTextView hrs = new CustomTextView(this, "h"),
-                           mins = new CustomTextView(this, "m"),
-                           secs = new CustomTextView(this, "s");*/
-
-            View[][] views = new View[][] {
-                new View[] {
-                    /*new TextView(this) { Text = "Horas:" },*/
-                    new CustomTextView(this, "h", 1)
-                }, new View[] {
-                    /*new TextView(this) { Text = "Minutos:" },*/
-                    new CustomTextView(this, "m", 2)
-                }, new View[] {
-                    /*new TextView(this) { Text = "Segundos:" },*/
-                    new CustomTextView(this, "s", 3)
-                }, new View[]
-                {
-                    new Button(this) { Text = "Start" },
-                    new Button(this) { Text = "Clear" }
-                }
+            Button reset = FindViewById<Button>(Resource.Id.Reset);
+            reset.Click += delegate
+            {
+                time = -1;
+                UpdateTimer(null, null);
             };
 
-            views[3][1].Click += (sender, args) =>
+            LinearLayout back = FindViewById<LinearLayout>(Resource.Id.BackLayout);
+            back.Click += delegate
             {
-                for (int i = 0; i < 3; i++)
-                    ((CustomTextView)views[i][0]).Time = 0;
-            };
-            views[3][0].Click += (sender, args) =>
-            {
-                if (((Button)sender).Text == "Start")
+                if (!active)
                 {
-                    views[3][1].PerformClick();
-                    ((Button)sender).Text = "Stop";
+                    reset.Enabled = false;
+                    active = true;
+                    back.SetBackgroundColor(AndroidColor.Argb(0xFF, 0xFF, 0x44, 0x4B));
                     t.Start();
                 }
                 else
                 {
                     t.Stop();
-                    ((Button)sender).Text = "Start";
+                    back.SetBackgroundColor(AndroidColor.Argb(0xFF, 0x44, 0x58, 0xFF));
+                    active = false;
+                    reset.Enabled = true;
                 }
             };
-            
+        }
 
-            foreach (View[] viewArr in views)
-            {
-                TableRow tr = new TableRow(this)
-                {
-                    Orientation = Orientation.Horizontal,
-                    LayoutParameters = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MatchParent, ViewGroup.LayoutParams.MatchParent)
-                };
-                
-                foreach (View v in viewArr)
-                {
-                    tr.AddView(v);
-                }
+        protected override void OnResume()
+        {
+            base.OnResume();
+            Window.AddFlags(WindowManagerFlags.KeepScreenOn);
+        }
 
-                tl.AddView(tr);
+        protected override void OnPause()
+        {
+            base.OnPause();
+            Window.ClearFlags(WindowManagerFlags.KeepScreenOn);
+        }
+
+        public override void OnSaveInstanceState(Bundle outState, PersistableBundle outPersistentState)
+        {
+            base.OnSaveInstanceState(outState, outPersistentState);
+
+            UpdateTimer(null, null);
+            if (!active) {
+                active = true;
+                t.Start();
             }
+        }
 
-            t.Elapsed += (sender, args) =>
+        private void UpdateTimer(object sender, ElapsedEventArgs e)
+        {
+            time++;
+            temp = time / 10;
+            RunOnUiThread(() =>
             {
-                ((CustomTextView)views[0][0]).Time = time / 3600;
-                ((CustomTextView)views[1][0]).Time = time / 60;
-                ((CustomTextView)views[2][0]).Time = time % 60;
-            };
-
-            SetContentView(tl);
+                FindViewById<TextView>(Resource.Id.Hrs).Text = string.Format("{0:00}h", temp / 3600);
+                FindViewById<TextView>(Resource.Id.Mins).Text = string.Format("{0:00}m", (temp % 3600) / 60);
+                FindViewById<TextView>(Resource.Id.Secs).Text = string.Format("{0:00}s", temp % 60);
+            });
         }
     }
 }
-
