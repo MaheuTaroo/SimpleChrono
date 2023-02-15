@@ -12,7 +12,7 @@
 		android:orientation="vertical"
 		android:gravity="center"
 		android:id="@+id/BackLayout"
-		android:background="#ff4458ff">
+		android:background="#ff000000">
 		<LinearLayout
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
@@ -24,28 +24,34 @@
 				android:layout_height="match_parent"
 				android:gravity="center"
 				android:text="00h"
-				android:textSize="40dp"/>
+				android:textSize="80dp"
+				android:textColor="#ff4458ff"
+				android:textStyle="bold" />
 			<TextView
 				android:id="@+id/Mins"
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
 				android:gravity="center"
 				android:text="00m"
-				android:textSize="40dp"/>
+				android:textSize="80dp"
+				android:textColor="#ff4458ff"
+				android:textStyle="bold" />
 			<TextView
 				android:id="@+id/Secs"
 				android:layout_width="wrap_content"
 				android:layout_height="match_parent"
 				android:gravity="center"
 				android:text="00s"
-				android:textSize="40dp"/>
+				android:textSize="80dp"
+				android:textColor="#ff4458ff"
+				android:textStyle="bold" />
 			<Button
 				android:id="@+id/Reset"
 				android:text="Reset"
 				android:layout_width="wrap_content"
 				android:layout_height="wrap_content"
-				android:layout_weight="1" />
+				android:layout_weight="1"
+				android:textSize="30dp" />
 		</LinearLayout>
-		
 	</LinearLayout>
 </RelativeLayout>

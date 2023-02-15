@@ -23,6 +23,12 @@ namespace SimpleChrono
 
             t.Elapsed += UpdateTimer;
 
+            TextView[] text = new TextView[3]
+            {
+                FindViewById<TextView>(Resource.Id.Hrs),
+                FindViewById<TextView>(Resource.Id.Mins),
+                FindViewById<TextView>(Resource.Id.Secs)
+            };
             Button reset = FindViewById<Button>(Resource.Id.Reset);
             reset.Click += delegate
             {
@@ -31,20 +37,20 @@ namespace SimpleChrono
             };
 
             LinearLayout back = FindViewById<LinearLayout>(Resource.Id.BackLayout);
-            back.Click += delegate
+            FindViewById<LinearLayout>(Resource.Id.BackLayout).Click += delegate
             {
                 if (!active)
                 {
                     reset.Enabled = false;
+                    for (int i = 0; i < 3; i++) text[i].SetTextColor(AndroidColor.Argb(0xFF, 0xFF, 0x44, 0x4B));
                     active = true;
-                    back.SetBackgroundColor(AndroidColor.Argb(0xFF, 0xFF, 0x44, 0x4B));
                     t.Start();
                 }
                 else
                 {
                     t.Stop();
-                    back.SetBackgroundColor(AndroidColor.Argb(0xFF, 0x44, 0x58, 0xFF));
                     active = false;
+                    for (int i = 0; i < 3; i++) text[i].SetTextColor(AndroidColor.Argb(0xFF, 0x44, 0x58, 0xFF));
                     reset.Enabled = true;
                 }
             };
